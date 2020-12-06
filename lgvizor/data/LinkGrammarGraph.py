@@ -153,12 +153,12 @@ class LinkGrammarGraph:
         for i, block in enumerate(lines):
             if '% C' in block:
                 cluster = lines[i].replace('% ', '').replace('\n', '')
-                cluster_words = lines[i + 1].replace(':\n', '').replace('"', '').split(' ')
-                rules = lines[i + 2].replace(';\n', '')\
-                    .replace(';', '')\
+                cluster_words = lines[i + 1].replace('\n', '').replace(':', '').replace('"', '').split(' ')
+                rules = lines[i + 2].replace(';', '')\
                     .replace('(', '')\
                     .replace(')', '')\
-                    .replace(' & ', '&')\
+                    .replace(' & ', '&') \
+                    .replace('\n', '') \
                     .split(' or ')
 
                 self.parse_cluster(cluster, cluster_words, rules)
