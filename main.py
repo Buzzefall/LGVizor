@@ -1,8 +1,7 @@
 from pyqtgraph.Qt import QtCore, QtGui
 
-from lgvizor.LGGraph import LGGraph
-from lgvizor.helpers import prepare_qt_widget
-
+from lgvizor.data.LGGraph import LGGraph
+from lgvizor.rendering.helpers import prepare_qt_widget
 
 if __name__ == '__main__':
     import sys
@@ -12,9 +11,9 @@ if __name__ == '__main__':
 
         lg_graph = LGGraph()
         lg_graph.parse_dictionary(dict_url)
-        pos, adj, colors, size = lg_graph.serialize(width_factor=2, height_factor=0.5)
+        pos, adj, colors, size, texts = lg_graph.serialize(width_factor=2, height_factor=0.5)
 
-        widget, view_box = prepare_qt_widget(1920, 1080)
-        widget.setData(pos=pos, adj=adj, pen=colors, size=size, pxMode=False)
+        graph_widget = prepare_qt_widget(1920, 1080)
+        graph_widget.setData(pos=pos, adj=adj, pen=colors, size=size, pxMode=False, texts=texts)
 
         QtGui.QApplication.instance().exec_()
