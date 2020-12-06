@@ -16,7 +16,7 @@ def prepare_qt_widget(w=800, h=600):
     graph_widget = LabeledGraphItem()
     view_box.addItem(graph_widget)
 
-    return graph_widget
+    return graph_widget, layout_widget
 
 
 def get_colored_pen(color, width):

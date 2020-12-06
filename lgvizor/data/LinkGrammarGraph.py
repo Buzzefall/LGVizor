@@ -4,7 +4,7 @@ import numpy as np
 from lgvizor.rendering.helpers import get_colored_pen
 
 
-class LGGraph:
+class LinkGrammarGraph:
     def __init__(self):
 
         self.category_words = {}
@@ -54,7 +54,7 @@ class LGGraph:
         graph_height = max(len(self.words), len(self.categories), len(self.rules), len(self.connectors))
 
         nodes_positions = []
-        nodes_labels = []
+        label_texts = []
         edges = []
         edge_colors = []
 
@@ -75,7 +75,7 @@ class LGGraph:
             category_pos = [w_offset, h_offset]
 
             nodes_positions.append(category_pos)
-            nodes_labels.append(category)
+            label_texts.append(category)
 
             serialized_categories_pos[category] = current_pos_idx
 
@@ -88,7 +88,7 @@ class LGGraph:
                     w_offset = 0
                     word_pos = [w_offset, h_offset]
                     nodes_positions.append(word_pos)
-                    nodes_labels.append(word)
+                    label_texts.append(word)
                     edges.append([current_pos_idx, serialized_categories_pos[category]])
                     serialized_words_pos[word] = current_pos_idx
                     current_pos_idx += 1
@@ -104,7 +104,7 @@ class LGGraph:
                     w_offset = 2 * w_step
                     rule_pos = [w_offset, h_offset]
                     nodes_positions.append(rule_pos)
-                    nodes_labels.append(rule)
+                    label_texts.append(rule)
                     edges.append([current_pos_idx, serialized_categories_pos[category]])
                     serialized_rules_pos[rule] = current_pos_idx
                     current_pos_idx += 1
@@ -120,7 +120,7 @@ class LGGraph:
                         w_offset = 3 * w_step
                         connector_pos = [w_offset, h_offset]
                         nodes_positions.append(connector_pos)
-                        nodes_labels.append(connector)
+                        label_texts.append(connector[:-1])
                         edges.append([current_pos_idx, serialized_rules_pos[rule]])
                         serialized_connectors_pos[connector[:-1]] = current_pos_idx
                         current_pos_idx += 1
@@ -134,7 +134,7 @@ class LGGraph:
                         edge_colors.append(get_colored_pen('red', self.link_width))
 
         nodes_positions = np.array(nodes_positions)
-        nodes_labels = np.array(nodes_positions)
+        label_texts = np.array(label_texts)
         edges = np.array(edges, dtype=np.uint)
         edge_colors = np.array(edge_colors, dtype=[
             ('red', np.ubyte),
@@ -143,7 +143,7 @@ class LGGraph:
             ('alpha', np.ubyte),
             ('width', np.float)])
 
-        return nodes_positions, edges, edge_colors, self.node_size, nodes_labels
+        return nodes_positions, edges, edge_colors, self.node_size, label_texts
 
     def parse_dictionary(self, lg_dictionary_url):
         response = request.urlopen(lg_dictionary_url)
@@ -154,7 +154,11 @@ class LGGraph:
             if '% C' in block:
                 cluster = lines[i].replace('% ', '').replace('\n', '')
                 cluster_words = lines[i + 1].replace(':\n', '').replace('"', '').split(' ')
-                rules = lines[i + 2].replace(';\n', '').replace('(', '').replace(')', '').replace(' & ', '&').split(
-                    ' or ')
+                rules = lines[i + 2].replace(';\n', '')\
+                    .replace(';', '')\
+                    .replace('(', '')\
+                    .replace(')', '')\
+                    .replace(' & ', '&')\
+                    .split(' or ')
 
                 self.parse_cluster(cluster, cluster_words, rules)

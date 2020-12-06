@@ -17,10 +17,11 @@ class LabeledGraphItem(pg.GraphItem):
             item.setParentItem(self)
             self.textItems.append(item)
 
-    def setData(self, **kwds):
-        self.setTexts(kwds.pop('texts', []))
+    def setData(self, **kwargs):
+        if 'texts' in kwargs:
+            self.texts = kwargs['texts']
+            self.setTexts(self.texts)
+            for i, item in enumerate(self.textItems):
+                item.setPos(*kwargs['pos'][i])
 
-        for i, item in enumerate(self.textItems):
-            item.setPos(*kwds['pos'][i])
-
-        pg.GraphItem.setData(self, **kwds)
+        pg.GraphItem.setData(self, **kwargs)
