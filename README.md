@@ -1,2 +1,4 @@
 # LGVizor
-Link Grammar Visualizer
+Link Grammar Visualizer (WIP)
+
+A tool to visualize relations betwwen Link Grammar words, categories, rules and connectors.
