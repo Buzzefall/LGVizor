@@ -1,18 +1,7 @@
 import urllib.request as request
 import numpy as np
 
-
-def get_colored_pen(color, width):
-    if color == 'red':
-        pen = (255, 0, 0, 255, width)
-    elif color == 'green':
-        pen = (0, 255, 0, 255, width)
-    elif color == 'blue':
-        pen = (0, 0, 255, 255, width)
-    else:
-        pen = (255, 255, 255, 255, width)
-
-    return pen
+from lgvizor.helpers import get_colored_pen
 
 
 class LGGraph:
@@ -55,9 +44,9 @@ class LGGraph:
         # (1) array of nodes positions [(x1, y1), ...]
         # (2) array of edges connecting nodes with indices in (1) array [(1, 7), ...]
         # (3) array of edge colors for each edge in the order of edge definition in (2)
+
         width_factor = 0.5 if width_factor <= 0.5 else width_factor
         height_factor = 0.5 if height_factor <= 0.5 else height_factor
-        size_factor = 0.5 if height_factor <= 0.5 else height_factor
 
         w_step = self.layout_offset * width_factor
         h_step = 2 * self.node_size * height_factor
@@ -88,7 +77,6 @@ class LGGraph:
 
             serialized_categories_pos[category] = current_pos_idx
 
-            # last_category_idx = current_pos_idx
             category_idx += 1
             current_pos_idx += 1
 
